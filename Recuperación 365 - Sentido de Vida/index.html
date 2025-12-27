@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperación 365 - Sentido de Vida</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --tere: #8b5cf6;
+            --caro: #ec4899;
+            --tono: #06b6d4;
+            --ulises: #10b981;
+            --bg-light: #f9fafb;
+            --bg-dark: #111827;
+            --text-light: #111827;
+            --text-dark: #f9fafb;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.light-mode {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+        }
+
+        body.dark-mode {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-title h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .header-title p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .dark-mode .stat-card {
+            background: #1f2937;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .stat-card h3 {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .view-toggle {
+            display: flex;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .dark-mode .view-toggle {
+            background: #1f2937;
+        }
+
+        .view-toggle button {
+            padding: 10px 20px;
+            background: transparent;
+            border-radius: 0;
+        }
+
+        .view-toggle button.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        select {
+            padding: 10px 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: white;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .dark-mode select {
+            background: #1f2937;
+            color: white;
+            border-color: #374151;
+        }
+
+        .calendar-view {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .dark-mode .calendar-view {
+            background: #1f2937;
+        }
+
+        .month-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .month-header h2 {
+            font-size: 1.5rem;
+        }
+
+        .month-theme {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calendar-day:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .calendar-day.has-content {
+            border-color: var(--secondary);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .calendar-day .day-number {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .calendar-day .day-title {
+            font-size: 0.75rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .status-badge {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .status-draft { background: #9ca3af; }
+        .status-review { background: var(--warning); }
+        .status-scheduled { background: var(--primary); }
+        .status-published { background: var(--secondary); }
+
+        .kanban-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .kanban-column {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .dark-mode .kanban-column {
+            background: #1f2937;
+        }
+
+        .kanban-column h3 {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .kanban-card {
+            background: var(--bg-light);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 4px solid var(--primary);
+        }
+
+        .dark-mode .kanban-card {
+            background: #111827;
+        }
+
+        .kanban-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .kanban-card.priority-high {
+            border-left-color: var(--danger);
+        }
+
+        .kanban-card.priority-medium {
+            border-left-color: var(--warning);
+        }
+
+        .kanban-card.priority-low {
+            border-left-color: #6b7280;
+        }
+
+        .kanban-card h4 {
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .kanban-card-meta {
+            display: flex;
+            gap: 10px;
+            font-size: 0.8rem;
+            color: #6b7280;
+            flex-wrap: wrap;
+        }
+
+        .therapist-badge {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .therapist-tere { background: var(--tere); color: white; }
+        .therapist-caro { background: var(--caro); color: white; }
+        .therapist-tono { background: var(--tono); color: white; }
+        .therapist-ulises { background: var(--ulises); color: white; }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .dark-mode .modal-content {
+            background: #1f2937;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close-btn:hover {
+            background: var(--bg-light);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+
+        .dark-mode .form-group input,
+        .dark-mode .form-group textarea,
+        .dark-mode .form-group select {
+            background: #111827;
+            color: white;
+            border-color: #374151;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .platforms {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .platform-tag {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border: 2px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .platform-tag.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .subtopics {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .subtopics input {
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--secondary);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .calendar-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .kanban-view {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body class="light-mode">
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="header-title">
+                    <h1>♥️ Recuperación 365 - Sentido de Vida</h1>
+                    <p>Gestión de Contenido Terapéutico sobre Adicciones | Zapotlanejo, Jalisco</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-primary" onclick="openModal()">+ Nueva Publicación</button>
+                    <button class="btn-secondary" onclick="exportData()">📥 Exportar</button>
+                    <button class="btn-secondary" onclick="importData()">📤 Importar</button>
+                    <button class="btn-secondary" onclick="toggleTheme()">🌓 Tema</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard" id="dashboard"></div>
+
+        <div class="controls">
+            <div class="view-toggle">
+                <button class="active" onclick="switchView('calendar')">📅 Calendario</button>
+                <button onclick="switchView('kanban')">📋 Tablero</button>
+            </div>
+            <select id="monthFilter" onchange="filterMonth()">
+                <option value="">Todos los Meses</option>
+                <option value="1">Enero - Fundamentos de las Adicciones</option>
+                <option value="2">Febrero - Adicciones a Sustancias Parte 1</option>
+                <option value="3">Marzo - Adicciones a Sustancias Parte 2</option>
+                <option value="4">Abril - Adicciones Comportamentales</option>
+                <option value="5">Mayo - Impacto en Salud Mental</option>
+                <option value="6">Junio - Consecuencias Físicas y Sociales</option>
+                <option value="7">Julio - Señales de Advertencia</option>
+                <option value="8">Agosto - Proceso de Rehabilitación</option>
+                <option value="9">Septiembre - Terapias y Tratamientos</option>
+                <option value="10">Octubre - Prevención de Recaídas</option>
+                <option value="11">Noviembre - Apoyo Familiar</option>
+                <option value="12">Diciembre - Estilo de Vida Saludable</option>
+            </select>
+            <select id="statusFilter" onchange="filterStatus()">
+                <option value="">Todos los Estados</option>
+                <option value="Borrador">Borrador</option>
+                <option value="En Revisión">En Revisión</option>
+                <option value="Programado">Programado</option>
+                <option value="Aplicado">Aplicado</option>
+            </select>
+            <select id="therapistFilter" onchange="filterTherapist()">
+                <option value="">Todos los Terapeutas</option>
+                <option value="Tere">Lic. Tere Hernández</option>
+                <option value="Caro">Caro Hernández</option>
+                <option value="Toño">Toño Guerrero</option>
+                <option value="Ulises">Ulises Azua</option>
+            </select>
+        </div>
+
+        <div id="calendarView" class="calendar-view"></div>
+        <div id="kanbanView" class="kanban-view" style="display:none;"></div>
+    </div>
+
+    <div class="modal" id="publicationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Nuevo Reactivo</h2>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <form id="publicationForm">
+                <input type="hidden" id="editId">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Día del Año (1-365) *</label>
+                        <input type="number" id="dayNumber" min="1" max="365" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha</label>
+                        <input type="date" id="publicationDate">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Título de la bateria o Reactivo *</label>
+                    <input type="text" id="title" placeholder="Ej: ¿Qué son las adicciones?" required>
+                </div>
+
+                <div class="form-group">
+                    <label>5 Subtemas *</label>
+                    <div class="subtopics">
+                        <input type="text" id="subtopic1" placeholder="1. Primer subtema" required>
+                        <input type="text" id="subtopic2" placeholder="2. Segundo subtema" required>
+                        <input type="text" id="subtopic3" placeholder="3. Tercer subtema" required>
+                        <input type="text" id="subtopic4" placeholder="4. Cuarto subtema" required>
+                        <input type="text" id="subtopic5" placeholder="5. Quinto subtema" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Terapeuta Responsable *</label>
+                        <select id="therapist" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="Tere">Lic. Tere Hernández</option>
+                            <option value="Caro">Caro Hernández</option>
+                            <option value="Toño">Toño Guerrero</option>
+                            <option value="Ulises"> titototo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Estado *</label>
+                        <select id="status" required>
+                            <option value="Borrador">Borrador</option>
+                            <option value="En Revisión">En Revisión</option>
+                            <option value="Programado">Programado</option>
+                            <option value="Aplicado">Aplicado</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Prioridad</label>
+                        <select id="priority">
+                            <option value="Media">Media</option>
+                            <option value="Alta">Alta</option>
+                            <option value="Baja">Baja</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo de Contenido</label>
+                        <select id="contentType">
+                            <option value="Educativo">Educativo</option>
+                            <option value="Preventivo">Preventivo</option>
+                            <option value="Testimonial">Testimonial</option>
+                            <option value="Emergencia">Emergencia</option>
+                            <option value="Familia">Familia</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Plataformas</label>
+                    <div class="platforms" id="platforms">
+                        <div class="platform-tag" data-platform="Facebook">Facebook</div>
+                        <div class="platform-tag" data-platform="Instagram">Instagram</div>
+                        <div class="platform-tag" data-platform="TikTok">TikTok</div>
+                        <div class="platform-tag" data-platform="WhatsApp">WhatsApp Business</div>
+                        <div class="platform-tag" data-platform="Blog">Blog</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>URL de Publicación</label>
+                    <input type="url" id="url" placeholder="https://facebook.com/...">
+                </div>
+
+                <div class="form-group">
+                    <label>Notas Internas</label>
+                    <textarea id="notes" placeholder="Notas, comentarios, recursos adicionales..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="sensitiveContent">
+                        Contenido Sensible (gatillos emocionales)
+                    </label>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-danger" id="deleteBtn" onclick="deletePublication()" style="display:none;">Eliminar</button>
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn-success">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <input type="file" id="importFile" accept=".json" style="display:none;" onchange="handleImport(event)">
+
+    <script>
+        const MONTHS = {
+            1: 'Enero - Fundamentos de las Adicciones',
+            2: 'Febrero - Adicciones a Sustancias Parte 1',
+            3: 'Marzo - Adicciones a Sustancias Parte 2',
+            4: 'Abril - Adicciones Comportamentales',
+            5: 'Mayo - Impacto en Salud Mental',
+            6: 'Junio - Consecuencias Físicas y Sociales',
+            7: 'Julio - Señales de Advertencia',
+            8: 'Agosto - Proceso de Rehabilitación',
+            9: 'Septiembre - Terapias y Tratamientos',
+            10: 'Octubre - Prevención de Recaídas',
+            11: 'Noviembre - Apoyo Familiar',
+            12: 'Diciembre - Estilo de Vida Saludable'
+        };
+
+        let publications = [];
+        let currentView = 'calendar';
+        let filters = { month: '', status: '', therapist: '' };
+
+        // Inicializar con ejemplos
+        function initializeData() {
+            const stored = localStorage.getItem('recuperacion365');
+            if (stored) {
+                publications = JSON.parse(stored);
+            } else {
+                publications = [
+                    {
+                        id: Date.now(),
+                        dayNumber: 1,
+                        date: '2026-01-01',
+                        title: '¿Qué son las adicciones?',
+                        subtopics: [
+                            'Definición científica de adicción',
+                            'Diferencia entre uso, abuso y dependencia',
+                            'Neurobiología básica: cómo afecta el cerebro',
+                            'Factores de riesgo y protección',
+                            'Mitos comunes sobre las adicciones'
+                        ],
+                        therapist: 'Tere',
+                        status: 'Aplicado',
+                        priority: 'Alta',
+                        contentType: 'Educativo',
+                        platforms: ['Facebook', 'Instagram'],
+                        url: 'https://facebook.com/ClinicaenadiccionesSentidoDeVidaGDL',
+                        notes: 'Primera publicación del año. Establecer bases conceptuales.',
+                        sensitiveContent: false
+                    },
+                    {
+                        id: Date.now() + 1,
+                        dayNumber: 15,
+                        date: '2026-01-15',
+                        title: 'Señales de alerta en adolescentes',
+                        subtopics: [
+                            'Cambios de comportamiento y humor',
+                            'Aislamiento social y pérdida de interés',
+                            'Descuido en apariencia personal y responsabilidades',
+                            'Problemas escolares y ausentismo',
+                            'Cuándo buscar ayuda profesional'
+                        ],
+                        therapist: 'Caro',
+                        status: 'Programado',
+                        priority: 'Alta',
+                        contentType: 'Preventivo',
+                        platforms: ['Facebook', 'Instagram', 'WhatsApp'],
+                        url: '',
+                        notes: 'Incluir teléfono de la clínica: 33 3196 2135',
+                        sensitiveContent: false
+                    }
+                ];
+                saveData();
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('recuperacion365', JSON.stringify(publications));
+            updateDashboard();
+            renderCurrentView();
+        }
+
+        function updateDashboard() {
+            const total = 365;
+            const created = publications.length;
+            const progress = Math.round((created / total) * 100);
+            
+            const byStatus = {
+                'Borrador': 0,
+                'En Revisión': 0,
+                'Programado': 0,
+                'Aplicado': 0
+            };
+
+            const byTherapist = {
+                'Tere': 0,
+                'Caro': 0,
+                'Toño': 0,
+                'Ulises': 0
+            };
+
+            publications.forEach(pub => {
+                byStatus[pub.status]++;
+                byTherapist[pub.therapist]++;
+            });
+
+            const dashboard = document.getElementById('dashboard');
+            dashboard.innerHTML = `
+                <div class="stat-card">
+                    <h3>Total Planificado</h3>
+                    <div class="value">${created}/365</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Progreso Anual</h3>
+                    <div class="value">${progress}%</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Borrador</h3>
+                    <div class="value" style="color: #9ca3af;">${byStatus['Borrador']}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>En Revisión</h3>
+                    <div class="value" style="color: var(--warning);">${byStatus['En Revisión']}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Programado</h3>
+                    <div class="value" style="color: var(--primary);">${byStatus['Programado']}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Aplicado</h3>
+                    <div class="value" style="color: var(--secondary);">${byStatus['Aplicado']}</div>
+                </div>
+            `;
+        }
+
+        function getFilteredPublications() {
+            return publications.filter(pub => {
+                if (filters.month && pub.date) {
+                    const pubMonth = new Date(pub.date).getMonth() + 1;
+                    if (pubMonth !== parseInt(filters.month)) return false;
+                }
+                if (filters.status && pub.status !== filters.status) return false;
+                if (filters.therapist && pub.therapist !== filters.therapist) return false;
+                return true;
+            });
+        }
+
+        function renderCalendarView() {
+            const filtered = getFilteredPublications();
+            const calendarView = document.getElementById('calendarView');
+            
+            const pubsByMonth = {};
+            for (let i = 1; i <= 12; i++) {
+                pubsByMonth[i] = [];
+            }
+
+            filtered.forEach(pub => {
+                if (pub.date) {
+                    const month = new Date(pub.date).getMonth() + 1;
+                    pubsByMonth[month].push(pub);
+                }
+            });
+
+            let html = '';
+            const displayMonths = filters.month ? [parseInt(filters.month)] : Object.keys(pubsByMonth).map(Number);
+
+            displayMonths.forEach(month => {
+                const pubs = pubsByMonth[month];
+                const daysInMonth = new Date(2026, month, 0).getDate();
+                
+                html += `
+                    <div style="margin-bottom: 40px;">
+                        <div class="month-header">
+                            <div>
+                                <h2>${MONTHS[month].split(' - ')[0]}</h2>
+                                <div class="month-theme">${MONTHS[month].split(' - ')[1]}</div>
+                            </div>
+                            <div style="font-size: 0.9rem; color: #6b7280;">
+                                ${pubs.length} / ${daysInMonth} días planificados
+                            </div>
+                        </div>
+                        <div class="calendar-grid">
+                `;
+
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const pub = pubs.find(p => new Date(p.date).getDate() === day);
+                    const hasContent = pub ? 'has-content' : '';
+                    const statusClass = pub ? `status-${pub.status.toLowerCase().replace(' ', '-')}` : '';
+                    
+                    html += `
+                        <div class="calendar-day ${hasContent}" onclick="${pub ? `openEditModal(${pub.id})` : ''}">
+                            <div class="day-number">${day}</div>
+                            ${pub ? `
+                                <div class="day-title">${pub.title}</div>
+                                <div class="status-badge ${statusClass}"></div>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+
+            calendarView.innerHTML = html || '<div class="empty-state">No hay Test que coincidan con los filtros</div>';
+        }
+
+        function renderKanbanView() {
+            const filtered = getFilteredPublications();
+            const kanbanView = document.getElementById('kanbanView');
+
+            const columns = {
+                'Borrador': [],
+                'En Revisión': [],
+                'Programado': [],
+                'Aplicado': []
+            };
+
+            filtered.forEach(pub => {
+                columns[pub.status].push(pub);
+            });
+
+            let html = '';
+            Object.keys(columns).forEach(status => {
+                const pubs = columns[status];
+                html += `
+                    <div class="kanban-column">
+                        <h3>
+                            <span>${status}</span>
+                            <span style="background: var(--bg-light); padding: 4px 12px; border-radius: 12px; font-size: 0.9rem;">${pubs.length}</span>
+                        </h3>
+                `;
+
+                if (pubs.length === 0) {
+                    html += '<div class="empty-state" style="padding: 20px;">Sin Test</div>';
+                } else {
+                    pubs.forEach(pub => {
+                        const therapistClass = `therapist-${pub.therapist.toLowerCase()}`;
+                        const priorityClass = `priority-${pub.priority.toLowerCase()}`;
+                        
+                        html += `
+                            <div class="kanban-card ${priorityClass}" onclick="openEditModal(${pub.id})">
+                                <h4>${pub.title}</h4>
+                                <div class="kanban-card-meta">
+                                    <span>Día ${pub.dayNumber}</span>
+                                    <span class="therapist-badge ${therapistClass}">${pub.therapist}</span>
+                                    ${pub.priority === 'Alta' ? '<span style="color: var(--danger);">⚠️ Alta</span>' : ''}
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+
+                html += '</div>';
+            });
+
+            kanbanView.innerHTML = html;
+        }
+
+        function renderCurrentView() {
+            if (currentView === 'calendar') {
+                renderCalendarView();
+            } else {
+                renderKanbanView();
+            }
+        }
+
+        function switchView(view) {
+            currentView = view;
+            document.querySelectorAll('.view-toggle button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            if (view === 'calendar') {
+                document.getElementById('calendarView').style.display = 'block';
+                document.getElementById('kanbanView').style.display = 'none';
+            } else {
+                document.getElementById('calendarView').style.display = 'none';
+                document.getElementById('kanbanView').style.display = 'grid';
+            }
+            renderCurrentView();
+        }
+
+        function filterMonth() {
+            filters.month = document.getElementById('monthFilter').value;
+            renderCurrentView();
+        }
+
+        function filterStatus() {
+            filters.status = document.getElementById('statusFilter').value;
+            renderCurrentView();
+        }
+
+        function filterTherapist() {
+            filters.therapist = document.getElementById('therapistFilter').value;
+            renderCurrentView();
+        }
+
+        function openModal() {
+            document.getElementById('modalTitle').textContent = 'Nueva Publicación';
+            document.getElementById('publicationForm').reset();
+            document.getElementById('editId').value = '';
+            document.getElementById('deleteBtn').style.display = 'none';
+            document.querySelectorAll('.platform-tag').forEach(tag => tag.classList.remove('selected'));
+            document.getElementById('publicationModal').classList.add('active');
+        }
+
+        function openEditModal(id) {
+            const pub = publications.find(p => p.id === id);
+            if (!pub) return;
+
+            document.getElementById('modalTitle').textContent = 'Editar Publicación';
+            document.getElementById('editId').value = pub.id;
+            document.getElementById('dayNumber').value = pub.dayNumber;
+            document.getElementById('publicationDate').value = pub.date;
+            document.getElementById('title').value = pub.title;
+            
+            pub.subtopics.forEach((subtopic, i) => {
+                document.getElementById(`subtopic${i + 1}`).value = subtopic;
+            });
+
+            document.getElementById('therapist').value = pub.therapist;
+            document.getElementById('status').value = pub.status;
+            document.getElementById('priority').value = pub.priority;
+            document.getElementById('contentType').value = pub.contentType || 'Educativo';
+            document.getElementById('url').value = pub.url || '';
+            document.getElementById('notes').value = pub.notes || '';
+            document.getElementById('sensitiveContent').checked = pub.sensitiveContent || false;
+
+            document.querySelectorAll('.platform-tag').forEach(tag => {
+                const platform = tag.dataset.platform;
+                if (pub.platforms.includes(platform)) {
+                    tag.classList.add('selected');
+                } else {
+                    tag.classList.remove('selected');
+                }
+            });
+
+            document.getElementById('deleteBtn').style.display = 'block';
+            document.getElementById('publicationModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('publicationModal').classList.remove('active');
+        }
+
+        document.querySelectorAll('.platform-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                this.classList.toggle('selected');
+            });
+        });
+
+        document.getElementById('publicationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const id = document.getElementById('editId').value;
+            const selectedPlatforms = Array.from(document.querySelectorAll('.platform-tag.selected'))
+                .map(tag => tag.dataset.platform);
+
+            const subtopics = [1, 2, 3, 4, 5].map(i => 
+                document.getElementById(`subtopic${i}`).value.trim()
+            );
+
+            const publicationData = {
+                dayNumber: parseInt(document.getElementById('dayNumber').value),
+                date: document.getElementById('publicationDate').value,
+                title: document.getElementById('title').value.trim(),
+                subtopics: subtopics,
+                therapist: document.getElementById('therapist').value,
+                status: document.getElementById('status').value,
+                priority: document.getElementById('priority').value,
+                contentType: document.getElementById('contentType').value,
+                platforms: selectedPlatforms,
+                url: document.getElementById('url').value.trim(),
+                notes: document.getElementById('notes').value.trim(),
+                sensitiveContent: document.getElementById('sensitiveContent').checked
+            };
+
+            if (id) {
+                // Editar existente
+                const index = publications.findIndex(p => p.id === parseInt(id));
+                publications[index] = { ...publications[index], ...publicationData };
+            } else {
+                // Nueva publicación
+                publicationData.id = Date.now();
+                publications.push(publicationData);
+            }
+
+            saveData();
+            closeModal();
+        });
+
+        function deletePublication() {
+            if (!confirm('¿Estás seguro de eliminar esta publicación?')) return;
+            
+            const id = parseInt(document.getElementById('editId').value);
+            publications = publications.filter(p => p.id !== id);
+            saveData();
+            closeModal();
+        }
+
+        function exportData() {
+            const dataStr = JSON.stringify(publications, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `recuperacion365-backup-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+            alert('Datos exportados exitosamente');
+        }
+
+        function importData() {
+            document.getElementById('importFile').click();
+        }
+
+        function handleImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (!Array.isArray(imported)) {
+                        throw new Error('Formato inválido');
+                    }
+                    
+                    if (confirm(`¿Importar ${imported.length} publicaciones? Esto reemplazará los datos actuales.`)) {
+                        publications = imported;
+                        saveData();
+                        alert('Datos importados exitosamente');
+                    }
+                } catch (error) {
+                    alert('Error al importar: archivo inválido');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            if (body.classList.contains('light-mode')) {
+                body.classList.remove('light-mode');
+                body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.remove('dark-mode');
+                body.classList.add('light-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Inicialización
+        window.addEventListener('DOMContentLoaded', function() {
+            // Restaurar tema
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.body.classList.add(`${savedTheme}-mode`);
+
+            // Cargar datos
+            initializeData();
+            updateDashboard();
+            renderCurrentView();
+        });
+
+        // Cerrar modal al hacer clic fuera
+        document.getElementById('publicationModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
